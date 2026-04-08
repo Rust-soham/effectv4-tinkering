@@ -1,5 +1,11 @@
 {
   "dependencies": {
-    "effect": "4.0.0-beta.9"
+    "@effect/platform-node": "4.0.0-beta.43",
+    "effect": "4.0.0-beta.43",
+    "hono": "^4.12.12",
+    "nodemailer": "^8.0.4"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^7.0.11"
   }
 }
