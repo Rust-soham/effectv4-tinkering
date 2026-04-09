@@ -1,34 +1,45 @@
-import { Schema } from "effect";
-import { HttpApiEndpoint } from "effect/unstable/httpapi";
+import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { Effect, Layer, Schema } from "effect";
+import { HttpRouter } from "effect/unstable/http";
+import {
+  HttpApi,
+  HttpApiBuilder,
+  HttpApiEndpoint,
+  HttpApiGroup,
+  HttpApiScalar,
+} from "effect/unstable/httpapi";
+import { createServer } from "node:http";
 
-const User = Schema.Struct({
-  id: Schema.String,
-  name: Schema.String,
-});
-
-HttpApiEndpoint.patch("updateUser", "/user/:id", {
-  params: {
-    id: Schema.String,
-  },
-  query: {
-    mode: Schema.Literals(["merge", "replace"]),
-  },
-
-  // optional headers
-  headers: {
-    "x-api-key": Schema.String,
-    "x-request-id": Schema.String,
-  },
-  // The request payload can be a single schema or an array of schemas.
-  // - Default encoding is JSON.
-  // - Default status for success is 200.
-  // For GET requests, the payload must be a record of schemas.
-  payload: [
-    // JSON payload (default encoding).
-    Schema.Struct({
-      name: Schema.String,
+// Definition
+const Api = HttpApi.make("MyApi").add(
+  // Define the API group
+  HttpApiGroup.make("Greetings").add(
+    // Define the endpoint
+    HttpApiEndpoint.get("hello", "/", {
+      // Define the success schema
+      success: Schema.String,
     }),
-    // text/plain payload.
-    Schema.String.pipe(HttpApiSchema.asText()),
-  ],
-});
+  ),
+);
+
+// Implementation
+const GroupLive = HttpApiBuilder.group(
+  Api,
+  "Greetings", // The name of the group to handle
+  (handlers) =>
+    handlers.handle(
+      "hello", // The name of the endpoint to handle
+      () => Effect.succeed("Hello, World!"), // The handler function
+    ),
+);
+
+// Server
+const ApiLive = HttpApiBuilder.layer(Api).pipe(
+  Layer.provide(GroupLive),
+  Layer.provide(HttpApiScalar.layer(Api)),
+  HttpRouter.serve,
+  Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
+);
+
+// Launch
+Layer.launch(ApiLive).pipe(NodeRuntime.runMain);
