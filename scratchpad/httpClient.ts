@@ -3,7 +3,7 @@
  *
  * Define a service that uses the HttpClient module to fetch data from an external API
  */
-import { Effect, flow, Layer, Schedule, Schema, ServiceMap } from "effect";
+import { Effect, flow, Layer, Schedule, Schema, Context } from "effect";
 import {
   FetchHttpClient,
   HttpClient,
@@ -18,7 +18,7 @@ class Todo extends Schema.Class<Todo>("Todo")({
   completed: Schema.Boolean,
 }) {}
 
-export class JsonPlaceholder extends ServiceMap.Service<
+export class JsonPlaceholder extends Context.Service<
   JsonPlaceholder,
   {
     readonly allTodos: Effect.Effect<ReadonlyArray<Todo>, JsonPlaceholderError>;

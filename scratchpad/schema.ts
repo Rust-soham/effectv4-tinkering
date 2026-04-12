@@ -8,5 +8,3 @@ const yo = Schema.Struct({
 });
 
 type yoType = typeof yo.Type;
-
-

@@ -1,4 +1,4 @@
-import { Effect, Layer, Ref, Schema, ServiceMap } from "effect";
+import { Effect, Layer, Ref, Schema, Context } from "effect";
 import { Hono } from "hono";
 
 class Todo extends Schema.Class<Todo>("Todo")({
@@ -20,7 +20,7 @@ class TodoNotFound extends Schema.TaggedErrorClass<TodoNotFound>()(
   },
 ) {}
 
-export class TodoRepo extends ServiceMap.Service<
+export class TodoRepo extends Context.Service<
   TodoRepo,
   {
     readonly getAll: Effect.Effect<ReadonlyArray<Todo>>;

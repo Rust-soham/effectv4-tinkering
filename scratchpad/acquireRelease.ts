@@ -1,11 +1,11 @@
-import { Config, Effect, Layer, Redacted, Schema, ServiceMap } from "effect";
+import { Config, Effect, Layer, Redacted, Schema, Context } from "effect";
 import * as NodeMailer from "nodemailer";
 
 export class SmtpError extends Schema.ErrorClass<SmtpError>("SmtpError")({
   cause: Schema.Defect,
 }) {}
 
-export class Smtp extends ServiceMap.Service<
+export class Smtp extends Context.Service<
   Smtp,
   {
     send(message: {
@@ -63,7 +63,7 @@ class MailerError extends Schema.TaggedErrorClass<MailerError>()(
   },
 ) {}
 
-export class Mailer extends ServiceMap.Service<
+export class Mailer extends Context.Service<
   Mailer,
   {
     sendWelcomeEmail(to: string): Effect.Effect<void, MailerError>;
