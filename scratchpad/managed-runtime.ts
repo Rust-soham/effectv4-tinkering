@@ -1,5 +1,4 @@
 import { Effect, Layer, Ref, Schema, Context } from "effect";
-import { Hono } from "hono";
 
 class Todo extends Schema.Class<Todo>("Todo")({
   id: Schema.Number,
