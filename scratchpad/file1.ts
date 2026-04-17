@@ -1,6 +1,6 @@
-import { Effect, ServiceMap } from "effect";
+import { Effect, Context } from "effect";
 
-export class demoI0 extends ServiceMap.Service<
+export class demoI0 extends Context.Service<
   demoI0,
   {
     name: string;
