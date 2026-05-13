@@ -80,3 +80,9 @@ export class ApiClient extends Context.Service<
     Layer.provide(FetchHttpClient.layer),
   );
 }
+
+export const callApi = Effect.gen(function* () {
+  const client = yield* ApiClient;
+
+  yield* client.health();
+}).pipe(Effect.provide(ApiClient.layer));
